@@ -4,15 +4,17 @@ class Game
 {
     private:
         void     processEvents(); 
-        void     update(sf::Time deltaTime);
+        void     update(sf::Time TimePerFrame);
         void     render();
         
         sf::RenderWindow mWindow;
-        sf::CircleShape mPlayer;
+        sf::Texture texture;
+        sf::Sprite mPlayer;
 
         void     handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
         bool     isMovingUp, isMovingDown, isMovingLeft, isMovingRight; 
         float    playerMovement;
+        sf::Time    TimePerFrame;
 
     public:
                 Game();
@@ -22,22 +24,27 @@ class Game
 
 Game::Game()
 : mWindow(sf::VideoMode(640, 320), "Moving Ball")
-, mPlayer()
 , isMovingUp(false), isMovingDown(false), isMovingLeft(false), isMovingRight(false)
 , playerMovement(150.f)
+, TimePerFrame(sf::seconds(1.f/15.f))
 {
-    mPlayer.setRadius(50.f);
-    mPlayer.setFillColor(sf::Color(100, 134, 32));
-    mPlayer.setPosition(320, 160);
+    texture.loadFromFile("/home/gysk/Projetos/SFML-Experiments/moving_ball/spaceship.png");
+    mPlayer.setTexture(texture);
+    mPlayer.setPosition(150.f, 150.f);
 }
 
 void Game::run()
 {
     sf::Clock clock;
+    sf::Time timeSinceLastUpdate = sf::Time::Zero;
     while(mWindow.isOpen()) {
-        sf::Time deltaTime = clock.restart();
         processEvents();
-        update(deltaTime);
+        timeSinceLastUpdate += clock.restart();
+        while(timeSinceLastUpdate > TimePerFrame) {
+            timeSinceLastUpdate -= TimePerFrame;
+            processEvents();
+            update(TimePerFrame);
+        }
         render();
     }
 }
@@ -62,7 +69,7 @@ void Game::processEvents()
     }
 }
 
-void Game::update(sf::Time deltaTime)
+void Game::update(sf::Time TimePerFrame)
 {
     sf::Vector2f movement(0.f, 0.f);
     if(isMovingUp)
@@ -73,7 +80,7 @@ void Game::update(sf::Time deltaTime)
         movement.x -= playerMovement;
     if(isMovingRight)
         movement.x += playerMovement;
-    mPlayer.move(movement * deltaTime.asSeconds());
+    mPlayer.move(movement * TimePerFrame.asSeconds());
 }
 
 void Game::render()
