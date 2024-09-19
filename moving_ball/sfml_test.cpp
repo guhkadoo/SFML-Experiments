@@ -52,7 +52,7 @@ class Game
         void     render();
         
         sf::RenderWindow mWindow;
-        sf::Texture texture;
+        TextureHolder textures;
         sf::Sprite mPlayer;
 
         void     handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
@@ -72,8 +72,8 @@ Game::Game()
 , playerMovement(150.f)
 , TimePerFrame(sf::seconds(1.f/15.f))
 {
-    texture.loadFromFile("/home/gysk/Projetos/SFML-Experiments/moving_ball/spaceship.png");
-    mPlayer.setTexture(texture);
+    textures.load(Textures::Airplane, "/home/gysk/Projetos/SFML-Experiments/moving_ball/spaceship.png");
+    mPlayer.setTexture(textures.get(Textures::Airplane));
     mPlayer.setPosition(150.f, 150.f);
 }
 
