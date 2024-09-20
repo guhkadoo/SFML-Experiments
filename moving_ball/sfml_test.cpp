@@ -1,7 +1,8 @@
-#include <SFML/Graphics.hpp>
 #include <assert.h>
 #include <cstdlib>
 #include "ResourceHolder.hpp"
+#include "Entity.hpp"
+#include "Aircraft.hpp"
 
 namespace Textures
 {
